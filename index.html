@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>HEIC → JPG 変換ツール</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+    h1 {
+      color: #333;
+    }
+    input, button {
+      margin: 10px;
+      padding: 10px;
+      font-size: 16px;
+    }
+    #downloadLink {
+      display: block;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>HEIC → JPG 変換ツール</h1>
+  <p>HEICファイルを選んで、JPGに変換します（ブラウザだけで動作）</p>
+
+  <input type="file" id="fileInput" accept=".heic" />
+  <br>
+  <button onclick="convert()">JPEGに変換</button>
+  <a id="downloadLink" style="display:none">ダウンロード</a>
+
+  <script src="https://unpkg.com/libheif-js/dist/libheif.min.js"></script>
+  <script>
+    async function convert() {
+      const file = document.getElementById('fileInput').files[0];
+      if (!file) return alert("ファイルを選んでください");
+
+      const arrayBuffer = await file.arrayBuffer();
+      const decoder = new libheif.HeifDecoder();
+      const images = decoder.decode(arrayBuffer);
+
+      if (images.length > 0) {
+        const img = images[0];
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d");
+        ctx.putImageData(img.getImageData(), 0, 0);
+
+        canvas.toBlob(blob => {
+          const url = URL.createObjectURL(blob);
+          const link = document.getElementById("downloadLink");
+          link.href = url;
+          link.download = file.name.replace(/\.heic$/i, ".jpg");
+          link.textContent = "変換されたJPGをダウンロード";
+          link.style.display = "block";
+        }, "image/jpeg");
+      } else {
+        alert("画像の読み込みに失敗しました");
+      }
+    }
+  </script>
+</body>
+</html>
