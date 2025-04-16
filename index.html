@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HEIC → JPG 変換ツール｜無料＆簡単＆高画質</title>
-  
-  <!-- デザイン用フォント -->
+  <title>HEIC → JPG 画像変換ツール（複数ファイル対応）</title>
+
+  <!-- フォント -->
   <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;700&display=swap" rel="stylesheet" />
 
   <style>
@@ -63,9 +63,9 @@
     button:hover {
       background: #009f88;
     }
-    #downloadLink {
+    #downloadLinks a {
       display: block;
-      margin-top: 30px;
+      margin-top: 15px;
       color: #007acc;
       font-weight: bold;
       font-size: 16px;
@@ -81,52 +81,63 @@
 </head>
 <body>
   <header>
-    <h1>HEIC → JPG 変換ツール</h1>
+    <h1>HEIC → JPG 変換ツール（複数対応）</h1>
   </header>
 
   <main>
-    <h2>ブラウザだけで簡単変換！</h2>
-    <p>iPhoneやMacで使われるHEIC画像を、無料でJPEGに変換できます。アプリ不要、データも保存されません。</p>
+    <h2>HEICファイルをまとめてJPEGに変換</h2>
+    <p>複数のHEIC画像を一括でJPEGに変換！無料・ブラウザだけで簡単に使えます。</p>
 
-    <input type="file" id="fileInput" accept=".heic" />
+    <input type="file" id="fileInput" accept=".heic" multiple />
     <br />
-    <button onclick="convert()">画像をJPEGに変換</button>
-    <a id="downloadLink" style="display:none">変換された画像をダウンロード</a>
+    <button onclick="convert()">選択した画像を変換</button>
+    <div id="downloadLinks"></div>
   </main>
 
   <footer>
-    © 2025 HEIC-JPG Tools | プライバシーは完全に保護されます
+    © 2025 HEIC-JPG Tools | プライバシー保護・アプリ不要
   </footer>
 
-  <!-- ライブラリ読み込み -->
+  <!-- ライブラリ -->
   <script src="https://unpkg.com/libheif-js/dist/libheif.min.js"></script>
   <script>
     async function convert() {
-      const file = document.getElementById("fileInput").files[0];
-      if (!file) return alert("HEICファイルを選択してください");
+      const files = document.getElementById("fileInput").files;
+      const linkArea = document.getElementById("downloadLinks");
+      linkArea.innerHTML = ""; // 初期化
 
-      const arrayBuffer = await file.arrayBuffer();
-      const decoder = new libheif.HeifDecoder();
-      const images = decoder.decode(arrayBuffer);
+      if (files.length === 0) {
+        alert("HEICファイルを選択してください");
+        return;
+      }
 
-      if (images.length > 0) {
-        const img = images[0];
-        const canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext("2d");
-        ctx.putImageData(img.getImageData(), 0, 0);
+      for (const file of files) {
+        const arrayBuffer = await file.arrayBuffer();
+        const decoder = new libheif.HeifDecoder();
+        const images = decoder.decode(arrayBuffer);
 
-        canvas.toBlob((blob) => {
-          const url = URL.createObjectURL(blob);
-          const link = document.getElementById("downloadLink");
-          link.href = url;
-          link.download = file.name.replace(/\.heic$/i, ".jpg");
-          link.textContent = "変換されたJPGをダウンロード";
-          link.style.display = "block";
-        }, "image/jpeg");
-      } else {
-        alert("画像の読み込みに失敗しました");
+        if (images.length > 0) {
+          const img = images[0];
+          const canvas = document.createElement("canvas");
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext("2d");
+          ctx.putImageData(img.getImageData(), 0, 0);
+
+          canvas.toBlob((blob) => {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = file.name.replace(/\.heic$/i, ".jpg");
+            link.textContent = `✅ ${link.download} をダウンロード`;
+            linkArea.appendChild(link);
+          }, "image/jpeg");
+        } else {
+          const errorMsg = document.createElement("p");
+          errorMsg.textContent = `⚠️ ${file.name} の読み込みに失敗しました`;
+          errorMsg.style.color = "red";
+          linkArea.appendChild(errorMsg);
+        }
       }
     }
   </script>
