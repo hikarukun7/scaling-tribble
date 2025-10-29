@@ -49,13 +49,13 @@ void separateBoxToSegments(const Box& rect, Segment& left, Segment& right,
 	Segment& top, Segment& bottom);
 
 //‰æ‘œî•ñ\‘¢‘Ì
-struct ImageDate
+struct ImageData
 {
 	HBITMAP img;
 	int width;
 	int height;
 
-	ImageDate() : img(nullptr), width(0), height(0) {}
+	ImageData() : img(nullptr), width(0), height(0) {}
 };
 
 //‰æ‘œ“Ç‚İ‚İ

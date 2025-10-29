@@ -70,7 +70,7 @@ bool loadImageData(const std::wstring& filePath, ImageData& imgData)
 	imgData.img = (HBITMAP)hd;
 
 	BITMAP bm;
-	GetObjectW(imgData, img, sizeof(BITMAP), &bm);
+	GetObjectW(imgData.img, sizeof(BITMAP), &bm);
 	imgData.width = bm.bmWidth;
 	imgData.height = bm.bmHeight;
 	return true;
@@ -84,7 +84,6 @@ void releaseImageData(ImageData& imgData)
 		imgData.img = nullptr;
 	}
 	imgData.width = 0;
-	imgData.Height = 0;
+	imgData.height = 0;
 }
 
-//ÇXÇWÉyÅ[ÉW

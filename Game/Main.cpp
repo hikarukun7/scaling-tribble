@@ -15,11 +15,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 namespace
 {
 	//ウィンドウのクラス名とタイトル
-	const wchar_t* WinClassName = L"Break Out";
-	const wchar_t* WinGameName = L"ブロック崩し";
+	const wchar_t* WinClassName = L"DXProj";
+	const wchar_t* WinGameName = L"DirectX Game";
 	//ウィンドウの幅と高さ
-	constexpr UINT WinWidth = 480;
-	constexpr UINT WinHeight = 640;
+	constexpr UINT WinWidth = 640;
+	constexpr UINT WinHeight = 480;
 
 	//ゲームデータ
 	std::unique_ptr<Game> game;
@@ -81,6 +81,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		{
 			DestroyWindow(hwnd);
 		}
+
 	}
 
 	//データ開放

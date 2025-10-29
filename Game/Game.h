@@ -7,6 +7,7 @@
 
 #include <memory>
 #include "Scene.h"
+#include "Renderer.h"
 
 class Game
 {
@@ -21,12 +22,6 @@ public:
 	int getHeight() const { return m_height; }
 
 	const Keyboard& getKeyboard() const { return m_keyboard; }
-	void drawCircle(const Circle& circle, COLORREF color);
-	void drawString(const wchar_t* str, const Vector2d& pos,
-		COLORREF color, int fsize);
-	void drawString(const wchar_t* str, int num, const Vector2d& pos,
-		COLORREF color, int fsize);
-	void drawRect(Box rect, COLORREF fillColor, COLORREF penColor);
 
 private:
 	HWND m_hwnd;
@@ -36,12 +31,8 @@ private:
 	Keyboard m_keyboard;
 
 	std::unique_ptr<Scene> m_scene;
-
+	std::unique_ptr<Renderer> m_rederer;
 	
-
-	HBITMAP  m_backBuffer;
-	HDC      m_backBufferDC;
-	COLORREF m_backColor;
 
 	static const float FrameRate;
 	static const float MaxDeltaTime;
@@ -55,9 +46,6 @@ private:
 	void input();
 	void update(float deltaTime);
 	void draw();
-
-	void clear();
-	void flip();
 
 	bool tick(float& deltaTime);
 
